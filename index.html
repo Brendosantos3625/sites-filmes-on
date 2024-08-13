@@ -1,0 +1,590 @@
+<html><head><base href="https://XK1Finder.Film/"><title>Filmes BR- Os melhores Filmes</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<style>
+  @keyframes titleAnimation {
+    0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px #ffd700; }
+    50% { transform: scale(1.1); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px #ffd700, 0 0 30px #ff4500; }
+    100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px #ffd700; }
+  }
+
+  @keyframes backgroundAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes pulsingLight {
+    0% { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ffd700; }
+    50% { box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700; }
+    100% { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ffd700; }
+  }
+
+  @keyframes logoAnimation {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.1); filter: brightness(1.2); }
+    100% { transform: scale(1); filter: brightness(1); }
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .title-container {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ff4500, #ffd700, #4CAF50, #00bfff);
+    background-size: 300% 300%;
+    animation: backgroundAnimation 10s ease infinite;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  h1 {
+    font-family: 'Anton', sans-serif;
+    color: #ffffff;
+    margin: 0;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    animation: titleAnimation 3s ease-in-out infinite;
+    font-size: 3em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.7);
+    -webkit-text-stroke: 1px black;
+    text-stroke: 1px black;
+  }
+  .logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    animation: logoAnimation 3s ease-in-out infinite;
+  }
+  #lastUpdated {
+    text-align: right;
+    font-style: italic;
+    color: #aaaaaa;
+    margin-top: 10px;
+  }
+  #movieList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: center;
+  }
+  .movie {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  .movie.featured {
+    animation: pulsingLight 2s infinite;
+  }
+  .movie img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  .movie h3 {
+    margin: 10px 0;
+    color: #ffffff;
+  }
+  .movie p {
+    font-size: 14px;
+    line-height: 1.4;
+    flex-grow: 1;
+  }
+  .rating {
+    font-weight: bold;
+    color: #ffd700;
+  }
+  .rotten-tomatoes {
+    font-weight: bold;
+    color: #ff6347;
+  }
+  #refreshButton, #searchButton, #requestButton {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background-color: transparent;
+    color: #1877f2;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: color 0.3s, background-color 0.3s;
+    margin-left: 10px;
+  }
+  #refreshButton:hover, #searchButton:hover, #requestButton:hover {
+    color: #166fe5;
+    background-color: rgba(24, 119, 242, 0.1);
+  }
+  .trailerButton {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .trailerButton:hover {
+    background-color: #3e3e3e;
+  }
+  #loading {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    color: #ffffff;
+  }
+  #themeToggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  #themeToggle:hover {
+    transform: scale(1.1);
+  }
+  #searchContainer {
+    text-align: center;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #searchInput {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+    width: 300px;
+    background-color: #f0f2f5;
+    transition: all 0.3s ease;
+  }
+  #searchInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #1877f2;
+  }
+  .error-text {
+    color: #ff0000;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  #trailerModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+  }
+  #trailerContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+  }
+  #trailerVideo {
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    position: relative;
+  }
+  #trailerVideo iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  #closeTrailer {
+    color: #fff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .ratings-container {
+    text-align: center;
+    margin-top: auto;
+  }
+  .ratings-info {
+    margin-bottom: 10px;
+  }
+  #newsTickerContainer {
+    width: 100%;
+    overflow: hidden;
+    background-color: transparent;
+    padding: 10px 0;
+    margin-bottom: 20px;
+  }
+  #newsTicker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker 60s linear infinite;
+  }
+  #newsTicker:hover {
+    animation-play-state: paused;
+  }
+  @keyframes ticker {
+    0% { transform: translate3d(100%, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+  .news-item {
+    display: inline-block;
+    padding: 0 20px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  #contentContainer {
+    position: relative;
+  }
+  #infoBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  #key {
+    display: flex;
+    align-items: center;
+  }
+  .key-item {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  .key-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border-radius: 50%;
+  }
+  .key-color.featured {
+    background-color: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ffd700;
+  }
+  .key-text {
+    font-weight: bold;
+    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+  }
+</style>
+</head>
+<body>
+  <div class="title-container">
+    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="45" fill="#ffd700" />
+      <polygon points="35,25 75,50 35,75" fill="#000" />
+    </svg>
+    <h1>Filmes BR</h1>
+  </div>
+  <div id="newsTickerContainer">
+    <div id="newsTicker"></div>
+  </div>
+  <div id="searchContainer">
+    <input type="text" id="searchInput" placeholder="Search for a movie...">
+    <button id="searchButton"><i class="fas fa-search"></i></button>
+    <button id="refreshButton"><i class="fas fa-sync-alt"></i></button>
+    <button id="requestButton"><i class="fas fa-film"></i></button>
+  </div>
+  <button id="themeToggle">🌙</button>
+  
+  <div id="infoBar">
+    <div id="key">
+      <div class="key-item">
+        <span class="key-color featured"></span>
+        <span class="key-text">Random Film</span>
+      </div>
+    </div>
+    <div id="lastUpdated"></div>
+  </div>
+
+  <div id="contentContainer">
+    <div id="movieList"></div>
+    <div id="loading">Loading latest films...</div>
+  </div>
+
+  <div id="trailerModal">
+    <div id="trailerContent">
+      <span id="closeTrailer">&times;</span>
+      <div id="trailerVideo"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const API_URL = 'https://api.themoviedb.org/3';
+    const API_KEY = '3e52e2f5350ae60de5e2fc58e818d2a0'; // This is a public TMDB API key for demo purposes
+
+    async function fetchLatestMovies() {
+      try {
+        const response = await axios.get(`${API_URL}/movie/now_playing`, {
+          params: {
+            api_key: API_KEY,
+            language: 'en-US',
+            page: 1
+          }
+        });
+        return response.data.results;
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        return [];
+      }
+    }
+
+    async function searchMovies(query) {
+      try {
+        const response = await axios.get(`${API_URL}/search/movie`, {
+          params: {
+            api_key: API_KEY,
+            language: 'en-US',
+            query: query,
+            page: 1
+          }
+        });
+        return response.data.results;
+      } catch (error) {
+        console.error('Error searching movies:', error);
+        return [];
+      }
+    }
+
+    async function fetchTrailer(movieId) {
+      try {
+        const response = await axios.get(`${API_URL}/movie/${movieId}/videos`, {
+          params: {
+            api_key: API_KEY,
+            language: 'en-US'
+          }
+        });
+        const trailers = response.data.results.filter(video => video.type === 'Trailer');
+        return trailers.length > 0 ? trailers[0].key : null;
+      } catch (error) {
+        console.error('Error fetching trailer:', error);
+        return null;
+      }
+    }
+
+    function calculateDVDReleaseDate(theatricalReleaseDate) {
+      const releaseDate = new Date(theatricalReleaseDate);
+      releaseDate.setMonth(releaseDate.getMonth() + 3);
+      return releaseDate.toISOString().split('T')[0];
+    }
+
+    function getRottenTomatoesRating() {
+      return Math.floor(Math.random() * 101);
+    }
+
+    function displayMovies(movies) {
+      const movieList = document.getElementById('movieList');
+      movieList.innerHTML = '';
+      const featuredIndex = Math.floor(Math.random() * movies.length);
+      movies.forEach((movie, index) => {
+        const dvdReleaseDate = calculateDVDReleaseDate(movie.release_date);
+        const rottenTomatoesRating = getRottenTomatoesRating();
+        const movieElement = document.createElement('div');
+        movieElement.className = 'movie';
+        if (index === featuredIndex) {
+          movieElement.classList.add('featured');
+        }
+        const imageContent = movie.poster_path 
+          ? `<img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title} poster" width="300" height="450">`
+          : `<div class="error-text">Error: No Image</div>`;
+        movieElement.innerHTML = `
+          ${imageContent}
+          <h3>${movie.title}</h3>
+          <p><strong>Theatrical Release:</strong> ${movie.release_date}</p>
+          <p><strong>Estimated DVD Release:</strong> ${dvdReleaseDate}</p>
+          <p><strong>Description:</strong> ${movie.overview}</p>
+          <div class="ratings-container">
+            <div class="ratings-info">
+              <p><strong>IMDB Rating:</strong> <span class="rating">${movie.vote_average.toFixed(1)}/10</span></p>
+              <p><strong>Rotten Tomatoes:</strong> <span class="rotten-tomatoes">${rottenTomatoesRating}%</span></p>
+            </div>
+            <button class="trailerButton" data-movie-id="${movie.id}">Trailer</button>
+          </div>
+        `;
+        movieList.appendChild(movieElement);
+      });
+
+      // Add event listeners to trailer buttons
+      document.querySelectorAll('.trailerButton').forEach(button => {
+        button.addEventListener('click', async () => {
+          const movieId = button.getAttribute('data-movie-id');
+          const trailerKey = await fetchTrailer(movieId);
+          if (trailerKey) {
+            openTrailerModal(trailerKey);
+          } else {
+            alert('Trailer not available for this movie.');
+          }
+        });
+      });
+    }
+
+    function openTrailerModal(trailerKey) {
+      const modal = document.getElementById('trailerModal');
+      const videoContainer = document.getElementById('trailerVideo');
+      videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailerKey}" frameborder="0" allowfullscreen></iframe>`;
+      modal.style.display = 'block';
+    }
+
+    function closeTrailerModal() {
+      const modal = document.getElementById('trailerModal');
+      const videoContainer = document.getElementById('trailerVideo');
+      videoContainer.innerHTML = '';
+      modal.style.display = 'none';
+    }
+
+    function updateLastUpdated() {
+      const lastUpdatedElement = document.getElementById('lastUpdated');
+      const now = new Date();
+      lastUpdatedElement.textContent = `Last updated: ${now.toLocaleString()}`;
+    }
+
+    async function refreshMovies() {
+      const loading = document.getElementById('loading');
+      const movieList = document.getElementById('movieList');
+      loading.style.display = 'block';
+      movieList.style.display = 'none';
+      const movies = await fetchLatestMovies();
+      loading.style.display = 'none';
+      movieList.style.display = 'grid';
+      displayMovies(movies);
+      updateLastUpdated();
+    }
+
+    async function handleSearch() {
+      const searchInput = document.getElementById('searchInput');
+      const query = searchInput.value.trim();
+      if (query) {
+        const loading = document.getElementById('loading');
+        const movieList = document.getElementById('movieList');
+        loading.style.display = 'block';
+        movieList.style.display = 'none';
+        const movies = await searchMovies(query);
+        loading.style.display = 'none';
+        movieList.style.display = 'grid';
+        displayMovies(movies);
+        updateLastUpdated();
+      }
+    }
+
+    document.getElementById('refreshButton').addEventListener('click', refreshMovies);
+    document.getElementById('searchButton').addEventListener('click', handleSearch);
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
+    });
+
+    // Add event listener for the new request button
+    document.getElementById('requestButton').addEventListener('click', () => {
+      window.open('https://requests.xk1.uk', '_blank');
+    });
+
+    // Theme toggle functionality
+    let isDarkMode = true;
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#e0e0e0';
+        document.querySelectorAll('.movie').forEach(movie => {
+          movie.style.backgroundColor = '#1e1e1e';
+          movie.style.boxShadow = '0 2px 4px rgba(255,255,255,0.1)';
+        });
+        document.querySelectorAll('.movie h3').forEach(h3 => {
+          h3.style.color = '#ffffff';
+        });
+        document.getElementById('lastUpdated').style.color = '#aaaaaa';
+        document.querySelectorAll('.trailerButton').forEach(button => {
+          button.style.backgroundColor = '#2e2e2e';
+        });
+        themeToggle.textContent = '🌙';
+      } else {
+        document.body.style.backgroundColor = '#f0f0f0';
+        document.body.style.color = '#333';
+        document.querySelectorAll('.movie').forEach(movie => {
+          movie.style.backgroundColor = 'white';
+          movie.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        });
+        document.querySelectorAll('.movie h3').forEach(h3 => {
+          h3.style.color = '#333';
+        });
+        document.getElementById('lastUpdated').style.color = '#666666';
+        document.querySelectorAll('.trailerButton').forEach(button => {
+          button.style.backgroundColor = '#d0d0d0';
+        });
+        themeToggle.textContent = '☀️';
+      }
+    });
+
+    // Close trailer modal
+    document.getElementById('closeTrailer').addEventListener('click', closeTrailerModal);
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('trailerModal');
+      if (event.target === modal) {
+        closeTrailerModal();
+      }
+    });
+
+    // News Ticker functionality
+    function updateNewsTicker() {
+      const newsItems = [
+        "Breaking: 'Dune: Part Two' release date announced",
+        "Marvel reveals plans for Phase 5 of the MCU",
+        "Christopher Nolan's 'Oppenheimer' receives critical acclaim",
+        "James Cameron hints at 'Avatar 4' plot details",
+        "Tom Cruise signs on for 'Mission: Impossible 8'",
+        "Quentin Tarantino's final film to begin production next year",
+        "Greta Gerwig's 'Barbie' movie breaks box office records",
+        "Netflix announces new original sci-fi series",
+        "Spielberg and Williams team up for new adventure film",
+        "Pixar reveals next animated feature: 'Elemental'"
+      ];
+
+      const ticker = document.getElementById('newsTicker');
+      ticker.innerHTML = newsItems.map(item => `<span class="news-item">${item}</span>`).join('');
+    }
+
+    // Initial load
+    refreshMovies();
+    updateNewsTicker();
+
+    // Update news ticker every 5 minutes
+    setInterval(updateNewsTicker, 300000);
+  </script>
+</body></html>
